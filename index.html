@@ -387,20 +387,20 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 .form-foot button{flex:none;white-space:nowrap}   /* 注意書きが長くても、送信ボタンが押しつぶされて丸くならない */
 .form-foot .small{min-width:0}
 /* 縦向きで画面が低い（古い・小さいiPhoneなど）：間隔とシンボルを縮める */
-/* 横向きで画面が低い：左にシンボル、右にコピー・パレット・ボタン */
-html.land{--hh:57px}
+/* 横向きで画面が低い：左にシンボル（上下に空きを取る）、右にコピー（横書き）・パレット3段・ボタン。PCと同じ考え方 */
+html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .1))}
 @media (min-width:761px){html.land{--hh:74px}}   /* PCの幅では、ヘッダーが少し高い */
-html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:5vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:6px 0;--sym:min(calc((var(--vh0,360px) - var(--hh) - 28px) / 1.29),300px)}
+html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:0;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
 html.land .hero .c{padding:0;flex:none}
 html.land .hero .stage{height:auto;gap:0;position:relative;top:0;width:auto}
-html.land .hero .words{position:relative;top:0;height:auto;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(calc(100vw - var(--sym) - 14vw),340px)}
-html.land .hero .concept{position:static;transform:none;writing-mode:horizontal-tb;font-size:16px;letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:auto;height:auto;text-align:left;margin-right:0}
-html.land .hero .words .maker{position:static;transform:none;width:100%;margin:0;row-gap:12px}
-html.land .hero .dots{display:grid;grid-template-columns:repeat(11,1fr);justify-items:center;gap:10px 0;width:100%}
-html.land .hero .dots button{width:20px;height:20px}
-html.land .hero .dots button.sp-only{display:block}
-html.land .hero .words .maker .tools{position:static;transform:none;display:flex;flex-direction:row;justify-content:center;gap:14px;flex:0 0 100%;margin:0}
-html.land .hero .tool{width:32px;height:32px}
+html.land .hero .words{position:relative;top:0;height:auto;display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--sym) * .08);width:auto}
+html.land .hero .concept{align-self:flex-start;justify-self:start;position:static;transform:none;writing-mode:horizontal-tb;font-size:max(13px,calc(var(--sym) * .075));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:auto;height:auto;text-align:left}
+html.land .hero .words .maker{position:static;transform:none;width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
+html.land .hero .dots{display:grid;grid-template-columns:repeat(7,max(18px,calc(var(--sym) * .1)));gap:calc(var(--sym) * .045);width:auto;justify-content:start}
+html.land .hero .dots button{width:max(18px,calc(var(--sym) * .1));height:max(18px,calc(var(--sym) * .1))}
+html.land .hero .dots button.sp-only{display:none}
+html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(28px,calc(var(--sym) * .15)));gap:8px;flex:none;margin:0}
+html.land .hero .tool{width:max(28px,calc(var(--sym) * .15));height:max(28px,calc(var(--sym) * .15))}
 
 /* ── 古いブラウザ向けの代わり：flexの gap が無い場合は、余白で間隔を作る ── */
 html.nogap .brand>*+*,html.nogap .lockup>*+*{margin-left:calc(var(--h)*.35413)}
@@ -411,6 +411,12 @@ html.nogap .thanks>*+*{margin-top:14px}
   html.nogap .tools>*+*{margin-left:calc(18px*var(--u,1))}
   html.nogap .maker .tools{margin-top:calc(22px*var(--u,1))}
   html.nogap .nav>*+*{margin-top:28px}
+}
+
+/* ── 12.9インチiPadなど（横向き）：シンボルとパレットの間を広げ、右のコピーとパレットを右へ寄せる ── */
+@media (min-width:1100px) and (max-width:1500px) and (orientation:landscape){
+  .hero{gap:max(48px,min(17vw,240px))}   /* シンボルとコピーの間を広げる（左右に少しずつ振り分ける） */
+  .hero .words{left:min(1vw,14px)}
 }
 
 /* ── タブレット（縦向き）：シンボルを内側へ。パレットは3段のまま、ボタンはその下に横一列 ── */
