@@ -184,6 +184,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 .dots{display:grid;grid-template-columns:repeat(7,24px);gap:10px}
 .dots button{width:24px;height:24px;border-radius:50%;border:0;padding:0;cursor:pointer;transition:transform .2s}
 .dots button:hover{transform:scale(1.15)}
+@media (min-width:761px){.dots button.sp-only{display:none}}   /* 22色目はスマホだけ */
 .dots button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ground),0 0 0 4.5px var(--ink)}
 .tools{display:grid;grid-template-columns:repeat(2,34px);gap:6px}   /* PC：2×2 */
 .tool{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--ink);background:none;color:var(--ink);
@@ -268,6 +269,10 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 .form > label,.form > .form-foot{transition:opacity .45s ease}
 .form button{transition:opacity .3s ease,transform .2s ease}
 .form.sending button{transform:scale(.96);opacity:.55;pointer-events:none}   /* 押した瞬間：少し沈む */
+.form.sending button{animation:mx-wait 1.3s ease-in-out infinite}   /* 待っているあいだ：ゆっくり呼吸する（止まって見えない） */
+.form.sending > label{opacity:.6}
+@keyframes mx-wait{0%,100%{opacity:.6}50%{opacity:.28}}
+@media (prefers-reduced-motion:reduce){.form.sending button{animation:none}}
 .form.sent > label,.form.sent > .form-foot{opacity:0;pointer-events:none}
 .thanks{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s ease .35s}
 .form.sent .thanks{opacity:1}
@@ -328,10 +333,13 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
   .hero{--stage-gap:38px;min-height:calc(100vh - 57px);min-height:calc(100svh - 57px);align-content:center}
   .stage{height:auto;padding-block:0}
-  .hero{--sym:min(61vw,240px)}
+  .hero{--sym:clamp(150px,min(61vw,240px,calc((100svh - 331px) / 1.29)),240px)}   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
   .c.words,.c.words .maker{width:var(--sym)}   /* パレットの左右の端は、シンボルの左右の端（丸いアーチの出っ張り）に合わせる。ロゴタイプの幅には合わせない */
-  .dots{gap:10px calc((var(--sym) - 168px) / 6)}
+  /* パレット：2段の横長（11＋10）。シンボルより広く、画面の幅いっぱいに */
+  .c.words,.c.words .maker{width:min(calc(100vw - 48px),340px)}
+  .dots{display:grid;grid-template-columns:repeat(11,22px);justify-content:space-between;gap:12px 0;width:100%}   /* 11＋10、2段目は左揃え */
+  .dots button{width:22px;height:22px}
   .stage{gap:0}               /* シンボルの下にロゴタイプ（間はロックアップ見本と同じ比率） */
   .head .c{padding-block:0}
   /* ── スマホ：線を減らし、メニューを見出しと同じ文字ルールに ── */
@@ -552,6 +560,14 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   nav.addEventListener("click",function(e){if(e.target.closest("a"))menu(false)});
   document.querySelector(".nav-logo").addEventListener("click",function(e){e.preventDefault();menu(false);window.scrollTo({top:0,behavior:"smooth"})});   // メニューの中のMIXDOT：いまの状態のまま、いちばん上へ（点から集まり直さない／塗った色も残す）。やり直すのは、左上のロゴだけ
   document.addEventListener("keydown",function(e){if(e.key==="Escape")menu(false)});
+  // ナビ（About / Business / Company / Contact）：該当の位置へ動かし、URLには「#」を残さない
+  nav.querySelectorAll('a[href^="#"]:not(.nav-logo)').forEach(function(a){
+    a.addEventListener("click",function(e){
+      var t=document.getElementById(a.getAttribute("href").slice(1));if(!t)return;
+      e.preventDefault();t.scrollIntoView();
+      if(history.replaceState)history.replaceState(null,"",location.pathname+location.search);
+    });
+  });
 
   // ── 冒頭：格子に並んだ8つの点が集まって、ひとつのマークになる ──
   var stage=document.getElementById("stage"),box=document.getElementById("gather"),heroRow=document.querySelector(".hero");
@@ -568,7 +584,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   var NONE="var(--ground)";
   var colors=[["赤","#e2452c"],["オレンジ","#f08a24"],["黄","#f2c53a"],["黄緑","#9bc53d"],["緑","#2f8f5b"],["シアン","#2bb5d6"],["青","#2a4fc4"],["紺","#1f3d63"],
               ["紫","#7a4fc9"],["マゼンタ","#d6408f"],["桃","#f0a6b8"],["茶","#8a5a3c"],["灰","#8b8b8b"],["黒","#1a1a1a"],
-              ["ベージュ","#e3d0b0"],["クリーム","#f6e7a8"],["ピーチ","#f7c9ae"],["ミント","#bfe5d0"],["スカイ","#b8dcf2"],["ラベンダー","#d3c7f0"],["ライム","#d8eaa0"]];
+              ["ベージュ","#e3d0b0"],["クリーム","#f6e7a8"],["ピーチ","#f7c9ae"],["ミント","#bfe5d0"],["スカイ","#b8dcf2"],["ラベンダー","#d3c7f0"],["ライム","#d8eaa0"],["ストーン","#d9d6cf"]];   // 22色目はスマホだけ（2段の11＋11をそろえる）。PCは21色のまま
   var KEY="mixdot-mark-v5-24";
   var maker=document.getElementById("maker"),dots=document.getElementById("dots");
   var state=cells.map(function(){return NONE}),picked=0,swatches=[];
@@ -734,6 +750,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
     b.type="button";b.style.background=col[1];b.title=col[0];b.setAttribute("aria-label","色："+col[0]);
     b.setAttribute("aria-pressed",i===picked);
     b.addEventListener("click",function(){picked=i;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===i)})});
+    if(i===21)b.className="sp-only";
     dots.appendChild(b);swatches.push(b);
   });
   function resetPick(){picked=0;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===0)})}   // 選択中の色の印を、はじめの赤に戻す
@@ -966,6 +983,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.textContent="メールアドレスを、ご確認ください。";return}
     msg.textContent="";
     f.style.minHeight=f.offsetHeight+"px";   // 入力欄が消えても、枠の高さは変えない（ページが動かない）
+    btn.style.minWidth=btn.offsetWidth+"px";btn.textContent="送信中…";   // 幅は変えずに、文字だけ「送信中…」に
     f.classList.add("sending");btn.disabled=true;
     var data=new URLSearchParams();
     data.set("name",name);data.set("email",email);
@@ -974,7 +992,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
     fetch(ENDPOINT,{method:"POST",mode:"no-cors",body:data}).then(function(){
       setTimeout(function(){f.classList.add("sent");[].forEach.call(f.querySelectorAll("input,textarea"),function(x){x.tabIndex=-1;x.setAttribute("aria-hidden","true")})},650);   // 押したあと、ひと呼吸おいて切り替わる
     }).catch(function(){
-      f.classList.remove("sending");btn.disabled=false;f.style.minHeight="";
+      f.classList.remove("sending");btn.disabled=false;f.style.minHeight="";btn.textContent="送信";btn.style.minWidth="";
       msg.textContent="送信できませんでした。時間をおいて、もう一度お試しください。";
     });
   });
