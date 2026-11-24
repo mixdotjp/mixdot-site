@@ -331,7 +331,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   /* 冒頭の高さ＝画面の高さからヘッダーを引いた分（＋1pxで下の罫線を画面外へ）。中身はその中で上下中央 */
   .head .c{height:58px}
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
-  .hero{--stage-gap:38px;min-height:calc(var(--vh0,100svh) - 57px + var(--bar,96px));padding-bottom:var(--bar,96px);align-content:center}   /* 高さは、開いた時の画面の高さで固定（ブラウザのバーが出入りしても動かない）。下に96px足して、下の罫線をバーの裏へ。中身は、足す前の高さの中で上下中央 */
+  .hero{--stage-gap:38px;min-height:calc(var(--vh0,100svh) - 57px);align-content:center}   /* 高さは、開いた時の画面の高さで固定（ブラウザのバーが出入りしても動かない）。下の罫線は、スクロールで見えてくるまで引かれない */
   .stage{height:auto;padding-block:0}
   .hero{--sym:clamp(150px,min(61vw,240px,calc((var(--vh0,100svh) - 331px) / 1.29)),240px)}   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
