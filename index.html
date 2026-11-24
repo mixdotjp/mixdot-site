@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* 黒の世界：最後に触ってから30分以内の再読み込みなら、黒のまま始める（白を一瞬も出さない）。過ぎていたら、白から始める */
+(function(){try{var s=JSON.parse(localStorage.getItem("mixdot_theme")||"null");
+if(s&&s.d&&Date.now()-s.t<1800000)document.documentElement.setAttribute("data-theme","dark");
+else if(s)localStorage.removeItem("mixdot_theme")}catch(e){}})();
+</script>
 <title>MIXDOT｜クリエイティブディレクション・デザイン・Web制作</title>
 <meta name="description" content="アイデアを探求し、表現を設計するクリエイティブカンパニーです。">
 <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAABNElEQVQ4jaWTMY6DQAxFXxB9DmCQ9gbQQpM2ZQoOgMQRco4cIRJ9KFLSpmHacINI4APsCdgizGhIoo2y+yr7j2zZHns1TRM+IlICJbBhyQWoVbX2xZVNICJfwBlI+J0e2KnqzSWYg6/A+k2w5RtIVfUWzsIZWGdZRp7nAMRxTBRFAIzjyDAMAHRdhzFmPcek4dxzApDnOYfDAQBVRUSe7P1+jzEGIBGRMuA+sAXb7fap5lcaUIZ4047jGFV1r03TOPt4PAJwOp38BJvA96IoQkQQEYwxFEVBURQYY5xu52JZJPgLoe+M4/iyhSzLnP7QAgH3DQNgGAZEhKqqAFwLAFVVISLuO2cuAVA/ltW27VOprzSgtpt4BZIPFgmgV9X036scAMyHkXI/lHf0Nhi8a7R8es4/9m+YCrp3R+IAAAAASUVORK5CYII=">
@@ -14,7 +20,7 @@
 <meta property="og:title" content="MIXDOT｜クリエイティブディレクション・デザイン・Web制作">
 <meta property="og:description" content="アイデアを探求し、表現を設計するクリエイティブカンパニーです。">
 <meta property="og:url" content="https://mixdot.co.jp/">
-<meta property="og:image" content="https://mixdot.co.jp/mixdot_ogp_1200x630.png">
+<meta property="og:image" content="https://mixdot.co.jp/mixdot_hello.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -92,6 +98,7 @@ svg{max-width:100%;height:auto;display:block}
 .js .row:not(.in) .c::before{transform:scaleY(0)}
 .js .row:not(.in) .dot{transform:scale(0)}
 .js .row:not(.in) .rise{opacity:0;transform:translateY(18px)}
+.js .row.hero:not(.in) .concept{opacity:0}   /* 冒頭のコピーは、1行目・2行目それぞれが自分で出る。位置を決める transform は、触らない */
 .row::before{transition:transform 1s var(--draw)}
 .c::before{transition:transform .9s var(--draw) .25s}
 .dot{transition:transform .45s cubic-bezier(.3,1.8,.5,1) .7s}
@@ -102,6 +109,7 @@ svg{max-width:100%;height:auto;display:block}
 .head .c{padding-block:19.5px 18.5px;display:flex;align-items:center}   /* ヘッダーの文字・ロゴを、帯の上下中央に（見た目の中心に合わせて補正） */
 .brand{--h:36px;display:flex;align-items:center;gap:calc(var(--h)*.35413);text-decoration:none}   /* 横組みロゴのSVG通りの比率：シンボル幅を1として、間 .354・ロゴタイプ幅 2.524 */
 .brand svg{width:var(--h);flex:none}
+.brand{position:relative;top:-1.5px}   /* 下に線があるぶん、実測の中央だと下がって見える。目の錯覚を、1.5px持ち上げて補正 */
 .brand .wordmark{width:calc(var(--h)*2.5239)}
 .lockup{--h:34px;display:flex;align-items:center;justify-content:center;gap:calc(var(--h)*.35413)}
 .lockup svg{width:var(--h);flex:none}
@@ -401,7 +409,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
         <svg id="heroWm" class="wordmark hero-wm" viewBox="210 205 1025 220" role="img" aria-label="MIXDOT"><path d="M1235,210v50h-52.5v160h-50v-160h-52.5v-50h155ZM435,420h50v-210h-50v210ZM1060,280v70c0,41.421-33.579,75-75,75s-75-33.579-75-75v-70c0-41.421,33.579-75,75-75s75,33.579,75,75ZM1010,280c0-13.785-11.215-25-25-25s-25,11.215-25,25v70c0,13.785,11.215,25,25,25s25-11.215,25-25v-70ZM885,285v60c0,41.355-33.645,75-75,75h-75v-210h75c41.355,0,75,33.645,75,75ZM835,285c0-13.785-11.215-25-25-25h-25v110h25c13.785,0,25-11.215,25-25v-60ZM649.96,210l-39.96,59.958-39.96-59.958h-60.04l69.98,105-69.98,105h60.04l39.96-59.958,39.96,59.958h60.04l-69.98-105,69.98-105h-60.04ZM354.868,210l-47.368,70.47-47.368-70.47h-50.132v210h50v-120.667l47.5,70.667,47.5-70.667v120.667h50v-210h-50.132Z"/></svg>
       </div>
       <div class="c words noline full-m">
-        <h1 class="concept rise"><span id="line1">点と点がつながり、</span><span id="line2">世界が動き出す。</span></h1>
+        <h1 class="concept"><span id="line1">点と点がつながり、</span><span id="line2">世界が動き出す。</span></h1>
         <div class="maker" id="maker">
           <div class="dots" id="dots" role="group" aria-label="色を選んで、円を押すと塗れる"></div>
           <div class="tools" id="tools">
@@ -712,6 +720,14 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
     });
   }
 
+  // フッターのロゴ：押すと、いちばん上へ戻る（塗った色や設定はそのまま。やり直しはしない）
+  (function(){var lk=document.querySelector(".foot .lockup");if(!lk)return;
+    lk.setAttribute("role","link");lk.setAttribute("tabindex","0");lk.setAttribute("aria-label","MIXDOT いちばん上へ");lk.style.cursor="pointer";
+    function up(){window.scrollTo({top:0,behavior:still?"auto":"smooth"})}
+    lk.addEventListener("click",up);
+    lk.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();up()}});
+  })();
+
   // ── 集まったあとの遊び：色を選んで、円を押す ──
   colors.forEach(function(col,i){
     var b=document.createElement("button");
@@ -874,7 +890,16 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
     var t=dark?"背景を白に戻す":"背景を黒にする";btnTheme.setAttribute("aria-label",t);btnTheme.title=t;
     if(p>=1)draw();
     setTimeout(function(){root.classList.remove("theming")},800);
+    saveTheme();
   }
+  // 黒の世界の記録：最後に触った時刻つき。30分以内の再読み込みなら黒のまま、過ぎたら白から（判定は <head> の先頭）
+  function saveTheme(){try{if(isDark())localStorage.setItem("mixdot_theme",JSON.stringify({d:1,t:Date.now()}));else localStorage.removeItem("mixdot_theme")}catch(e){}}
+  // 時刻は「ページを触ったとき」だけ書き換える（再読み込みや、タブを離れるだけでは書き換えない。Command R のキーも数えない）
+  var lastSave=0;
+  function touch(){var n=Date.now();if(n-lastSave>5000){lastSave=n;saveTheme()}}
+  ["pointerdown","wheel","touchstart","scroll"].forEach(function(ev){window.addEventListener(ev,touch,{passive:true})});
+  window.addEventListener("keydown",function(e){if(!e.metaKey&&!e.ctrlKey&&!e.altKey)touch()});
+  saveTheme();
   btnTheme.setAttribute("aria-pressed",isDark());
   if(isDark()){btnTheme.setAttribute("aria-label","背景を白に戻す");btnTheme.title="背景を白に戻す"}
   btnTheme.addEventListener("click",function(){flash(btnTheme);setTheme(!isDark())});
@@ -917,14 +942,15 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   btnSave.addEventListener("click",function(){
     if(p<1||(mode!=="main"&&!(mode==="variant"&&vPhase==="stop"&&vS)))return;flash(btnSave);
     makeWallpaper().then(function(blob){
-      var file=new File([blob],"hello-mixdot.png",{type:"image/png"});
-      function dl(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hello-mixdot.png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
+      var file=new File([blob],"mixdot_with_you.png",{type:"image/png"});
+      function dl(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mixdot_with_you.png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
       function plain(){
-        if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError")dl()})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
+        var touchDev=window.matchMedia&&window.matchMedia("(pointer:coarse)").matches;   // 共有シートを出すのは、スマホ・タブレットだけ（写真に保存できる）。PCは、そのままダウンロード
+        if(touchDev&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError")dl()})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
         else{dl()}
       }
       // 作業用プレビュー（アーティファクト）の中では、ダウンロードの許可を通す。本番のサイトでは、そのまま保存・共有
-      if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(dl){if(dl){dl.save({filename:"hello-mixdot.png",data:blob}).catch(function(){})}else{plain()}}).catch(plain)}
+      if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(dl){if(dl){dl.save({filename:"mixdot_with_you.png",data:blob}).catch(function(){})}else{plain()}}).catch(plain)}
       else{plain()}
     }).catch(function(){});
   });
