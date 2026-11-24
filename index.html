@@ -331,9 +331,9 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   /* 冒頭の高さ＝画面の高さからヘッダーを引いた分（＋1pxで下の罫線を画面外へ）。中身はその中で上下中央 */
   .head .c{height:58px}
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
-  .hero{--stage-gap:38px;min-height:calc(100vh - 57px);min-height:calc(100svh - 57px);min-height:calc(100lvh - 57px);align-content:center}   /* lvh：Safariの下バーが引っ込んだ高さまで広げ、下の罫線をバーの裏に隠す（中身は、その分だけ下がる） */
+  .hero{--stage-gap:38px;min-height:calc(var(--vh0,100svh) - 57px + var(--bar,96px));padding-bottom:var(--bar,96px);align-content:center}   /* 高さは、開いた時の画面の高さで固定（ブラウザのバーが出入りしても動かない）。下に96px足して、下の罫線をバーの裏へ。中身は、足す前の高さの中で上下中央 */
   .stage{height:auto;padding-block:0}
-  .hero{--sym:clamp(150px,min(61vw,240px,calc((100svh - 331px) / 1.29)),240px)}   /* 画面が低いときは、全体が収まるようシンボルも縮む */
+  .hero{--sym:clamp(150px,min(61vw,240px,calc((var(--vh0,100svh) - 331px) / 1.29)),240px)}   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
   .c.words,.c.words .maker{width:var(--sym)}   /* パレットの左右の端は、シンボルの左右の端（丸いアーチの出っ張り）に合わせる。ロゴタイプの幅には合わせない */
   /* パレット：2段の横長（11＋10）。シンボルより広く、画面の幅いっぱいに */
@@ -515,6 +515,13 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 (function(){
   var root=document.documentElement;
   var still=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ── 冒頭の高さ：開いた時の画面の高さで固定する（スクロールでブラウザのバーが引っ込んでも、シンボルや線がずれない）。横幅が変わった時（回転など）だけ測り直す ──
+  var lockW=window.innerWidth;
+  function lockVh(){root.style.setProperty("--vh0",window.innerHeight+"px")}
+  lockVh();
+  window.addEventListener("resize",function(){if(window.innerWidth!==lockW){lockW=window.innerWidth;lockVh()}});
+  window.addEventListener("orientationchange",function(){setTimeout(function(){lockW=window.innerWidth;lockVh()},300)});
 
   // ── 行ごとの登場：線が引かれ、点が打たれ、中身が上がる ──
   var rows=[].slice.call(document.querySelectorAll(".row"));
