@@ -393,12 +393,12 @@ html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .1))}
 html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:0;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
 html.land .hero .c{padding:0;flex:none}
 html.land .hero .stage{height:auto;gap:0;position:relative;top:0;width:auto}
-html.land .hero .words{position:relative;top:0;height:auto;display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--sym) * .08);width:auto}
-html.land .hero .concept{align-self:flex-start;justify-self:start;position:static;transform:none;writing-mode:horizontal-tb;font-size:max(13px,calc(var(--sym) * .075));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:auto;height:auto;text-align:left}
-html.land .hero .words .maker{position:static;transform:none;width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
-html.land .hero .dots{display:grid;grid-template-columns:repeat(7,max(18px,calc(var(--sym) * .1)));gap:calc(var(--sym) * .045);width:auto;justify-content:start}
-html.land .hero .dots button{width:max(18px,calc(var(--sym) * .1));height:max(18px,calc(var(--sym) * .1))}
-html.land .hero .dots button.sp-only{display:none}
+html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(28px,calc(var(--sym) * .15));position:relative;top:0;display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 8px);margin-left:calc(var(--sym) * .14)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
+html.land .hero .concept{position:absolute;left:0;top:calc(var(--sym) * .42);transform:translateY(-50%);writing-mode:horizontal-tb;font-size:max(14px,calc(var(--sym) * .095));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:var(--pw);height:auto;text-align:center}
+html.land .hero .words .maker{position:absolute;left:0;top:calc(var(--sym) * 1.189409);transform:translateY(-50%);width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
+html.land .hero .dots{display:grid;grid-template-columns:repeat(11,var(--pd));gap:var(--pg);width:auto;justify-content:start}
+html.land .hero .dots button{width:var(--pd);height:var(--pd)}
+html.land .hero .dots button.sp-only{display:block}
 html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(28px,calc(var(--sym) * .15)));gap:8px;flex:none;margin:0}
 html.land .hero .tool{width:max(28px,calc(var(--sym) * .15));height:max(28px,calc(var(--sym) * .15))}
 
