@@ -390,11 +390,11 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 /* 横向きで画面が低い：左にシンボル（上下に空きを取る）、右にコピー（横書き）・パレット3段・ボタン。PCと同じ考え方 */
 html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .1))}
 @media (min-width:761px){html.land{--hh:74px}}   /* PCの幅では、ヘッダーが少し高い */
-html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:0;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
+html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:0 0 0 6vw;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
 html.land .hero .c{padding:0;flex:none}
-html.land .hero .stage{height:auto;gap:0;position:relative;top:0;width:auto}
-html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(28px,calc(var(--sym) * .15));position:relative;top:0;display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 8px);margin-left:calc(var(--sym) * .14)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
-html.land .hero .concept{position:absolute;left:0;top:calc(var(--sym) * .42);transform:translateY(-50%);writing-mode:horizontal-tb;font-size:max(14px,calc(var(--sym) * .095));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:var(--pw);height:auto;text-align:center}
+html.land .hero .stage{height:auto;gap:0;position:relative;top:calc(var(--sym) * .012);width:auto}
+html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(28px,calc(var(--sym) * .15));position:relative;top:calc(var(--sym) * .012);display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 8px);margin-left:calc(var(--sym) * .05)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
+html.land .hero .concept{position:absolute;left:calc(var(--sym) * .065);top:calc(var(--sym) * .46);transform:translateY(-50%);writing-mode:horizontal-tb;font-size:max(14px,calc(var(--sym) * .095));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:var(--pw);height:auto;text-align:center}
 html.land .hero .words .maker{position:absolute;left:0;top:calc(var(--sym) * 1.189409);transform:translateY(-50%);width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
 html.land .hero .dots{display:grid;grid-template-columns:repeat(11,var(--pd));gap:var(--pg);width:auto;justify-content:start}
 html.land .hero .dots button{width:var(--pd);height:var(--pd)}
@@ -415,8 +415,9 @@ html.nogap .thanks>*+*{margin-top:14px}
 
 /* ── 12.9インチiPadなど（横向き）：シンボルとパレットの間を広げ、右のコピーとパレットを右へ寄せる ── */
 @media (min-width:1100px) and (max-width:1500px) and (orientation:landscape){
-  .hero{gap:max(48px,min(17vw,240px))}   /* シンボルとコピーの間を広げる（左右に少しずつ振り分ける） */
-  .hero .words{left:min(1vw,14px)}
+  .hero{gap:max(48px,min(15.5vw,220px))}   /* シンボルとコピーの間を少し広げる */
+  .hero .stage,.hero .words{top:-8px}
+  .hero .words{left:-10px}   /* 上が狭く下が空いて見えたので、少し下げる */
 }
 
 /* ── タブレット（縦向き）：シンボルを内側へ。パレットは3段のまま、ボタンはその下に横一列 ── */
@@ -649,8 +650,9 @@ html.nogap .thanks>*+*{margin-top:14px}
   // 塗れる色（仮）。先頭は「なし」＝線だけ
   var NONE="var(--ground)";
   var colors=[["赤","#e2452c"],["オレンジ","#f08a24"],["黄","#f2c53a"],["黄緑","#9bc53d"],["緑","#2f8f5b"],["シアン","#2bb5d6"],["青","#2a4fc4"],["紺","#1f3d63"],
-              ["紫","#7a4fc9"],["マゼンタ","#d6408f"],["桃","#f0a6b8"],["茶","#8a5a3c"],["灰","#8b8b8b"],["黒","#1a1a1a"],
-              ["ベージュ","#e3d0b0"],["クリーム","#f6e7a8"],["ピーチ","#f7c9ae"],["ミント","#bfe5d0"],["スカイ","#b8dcf2"],["ラベンダー","#d3c7f0"],["ライム","#d8eaa0"],["ストーン","#d9d6cf"]];   // 22色目はスマホだけ（2段の11＋11をそろえる）。PCは21色のまま
+              ["紫","#7a4fc9"],["マゼンタ","#d6408f"],["桃","#f0a6b8"],["ベージュ","#e3d0b0"],["クリーム","#f6e7a8"],["ピーチ","#f7c9ae"],["ミント","#bfe5d0"],["スカイ","#b8dcf2"],["ラベンダー","#d3c7f0"],["ライム","#d8eaa0"],
+              ["ストーン","#d9d6cf"],["シルバー","#b9bec6"],["ゴールド","#cdb465"],["黒","#1a1a1a"]];   // 22色。最後の3つは、シルバー・ゴールド・黒の順（黒が一番最後）。ストーン（19番目）はスマホだけ＝PCの3段は21色
+  var BI=21,SPI=18;   // BI：黒の番号、SPI：スマホだけに出す色の番号   // 22色目はスマホだけ（2段の11＋11をそろえる）。PCは21色のまま
   var KEY="mixdot-mark-v5-24";
   var maker=document.getElementById("maker"),dots=document.getElementById("dots");
   var state=cells.map(function(){return NONE}),picked=0,swatches=[];
@@ -662,7 +664,7 @@ html.nogap .thanks>*+*{margin-top:14px}
   readTheme();
   var BLACK="#1a1a1a",WHITE="#ffffff";
   function isDark(){return document.documentElement.getAttribute("data-theme")==="dark"}
-  if(isDark())colors[13]=["白",WHITE];   // 黒の世界では、パレットの「黒」が「白」に入れ替わる
+  if(isDark())colors[BI]=["白",WHITE];   // 黒の世界では、パレットの「黒」が「白」に入れ替わる
   function col(v){return v===NONE?GROUND:v}
   // 完成後の静止状態（動きの最中は、ブラウザ任せのアニメーションがこれを上書きする）
   function draw(){
@@ -816,7 +818,7 @@ html.nogap .thanks>*+*{margin-top:14px}
     b.type="button";b.style.background=col[1];b.title=col[0];b.setAttribute("aria-label","色："+col[0]);
     b.setAttribute("aria-pressed",i===picked);
     b.addEventListener("click",function(){picked=i;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===i)})});
-    if(i===21)b.className="sp-only";
+    if(i===SPI)b.className="sp-only";
     dots.appendChild(b);swatches.push(b);
   });
   function resetPick(){picked=0;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===0)})}   // 選択中の色の印を、はじめの赤に戻す
@@ -961,14 +963,14 @@ html.nogap .thanks>*+*{margin-top:14px}
   // ── 白の世界／黒の世界 ──
   var btnTheme=document.getElementById("btn-theme");
   function setTheme(dark){
-    var root=document.documentElement,old=colors[13][1];
+    var root=document.documentElement,old=colors[BI][1];
     root.classList.add("theming");
     if(dark)root.setAttribute("data-theme","dark");else root.removeAttribute("data-theme");
     readTheme();
-    colors[13]=dark?["白",WHITE]:["黒",BLACK];
-    state=state.map(function(v){return v===old?colors[13][1]:v});   // 塗ってあった「黒」は「白」へ（逆も）
-    if(vS){vS.vals=vS.vals.map(function(v){return v===old?colors[13][1]:v});paintRender()}
-    var sw=swatches[13];if(sw){sw.style.background=colors[13][1];sw.title=colors[13][0];sw.setAttribute("aria-label","色："+colors[13][0])}
+    colors[BI]=dark?["白",WHITE]:["黒",BLACK];
+    state=state.map(function(v){return v===old?colors[BI][1]:v});   // 塗ってあった「黒」は「白」へ（逆も）
+    if(vS){vS.vals=vS.vals.map(function(v){return v===old?colors[BI][1]:v});paintRender()}
+    var sw=swatches[BI];if(sw){sw.style.background=colors[BI][1];sw.title=colors[BI][0];sw.setAttribute("aria-label","色："+colors[BI][0])}
     btnTheme.setAttribute("aria-pressed",dark);
     var t=dark?"背景を白に戻す":"背景を黒にする";btnTheme.setAttribute("aria-label",t);btnTheme.title=t;
     if(p>=1)draw();
