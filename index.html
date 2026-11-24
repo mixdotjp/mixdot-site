@@ -141,7 +141,7 @@ svg{max-width:100%;height:auto;display:block}
   /* シンボルとコピーを、ひとまとまりにして画面の中央へ。シンボルの左の空きと、コピーの右の空きが、必ず同じになる */
   .hero{--sym:min(42vh,430px,44vw);display:flex;justify-content:center;gap:clamp(48px,14.2vw,204px)}
   .hero .stage{flex:none;padding-inline:0}
-  .hero .stage,.hero .words{position:relative;top:-14px}   /* 上下の線のちょうど真ん中だと、見た目は下がって見える（ロゴタイプ下の余白が軽い）ので、全体を14pxだけ上へ */
+  .hero .stage,.hero .words{position:relative;top:-28px}   /* 上下の線のちょうど真ん中だと、丸いシンボルの上が軽く見えて全体が下がって見える。全体を28px上へ */
   .hero .words{flex:none;padding-inline:0}
   .hero .gather{width:var(--sym)}
   .concept{margin-left:0;margin-right:-.55em}   /* -.55em：行間（line-height 2.1）が文字の右に付けている半行ぶんを差し引き、字の右端を基準にする */
