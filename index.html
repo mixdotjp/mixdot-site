@@ -141,6 +141,7 @@ svg{max-width:100%;height:auto;display:block}
   /* シンボルとコピーを、ひとまとまりにして画面の中央へ。シンボルの左の空きと、コピーの右の空きが、必ず同じになる */
   .hero{--sym:min(42vh,430px,44vw);display:flex;justify-content:center;gap:clamp(48px,14.2vw,204px)}
   .hero .stage{flex:none;padding-inline:0}
+  .hero .stage,.hero .words{position:relative;top:-14px}   /* 上下の線のちょうど真ん中だと、見た目は下がって見える（ロゴタイプ下の余白が軽い）ので、全体を14pxだけ上へ */
   .hero .words{flex:none;padding-inline:0}
   .hero .gather{width:var(--sym)}
   .concept{margin-left:0;margin-right:-.55em}   /* -.55em：行間（line-height 2.1）が文字の右に付けている半行ぶんを差し引き、字の右端を基準にする */
@@ -331,7 +332,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   /* 冒頭の高さ＝画面の高さからヘッダーを引いた分（＋1pxで下の罫線を画面外へ）。中身はその中で上下中央 */
   .head .c{height:58px}
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
-  .hero{--stage-gap:38px;min-height:calc(var(--vh0,100svh) - 57px);align-content:center}   /* 高さは、開いた時の画面の高さで固定（ブラウザのバーが出入りしても動かない）。下の罫線は、スクロールで見えてくるまで引かれない */
+  .hero{--stage-gap:38px;min-height:calc(var(--vh0,100svh) - 9px);padding-block:36px;align-content:center}   /* 高さ＝開いた時の画面＋48px。下の罫線は、ブラウザのバー（下のUI）の裏に隠れる。中身は上下中央＝シンボルの上と、ボタンの下の空きが同じ */
   .stage{height:auto;padding-block:0}
   .hero{--sym:clamp(150px,min(61vw,240px,calc((var(--vh0,100svh) - 331px) / 1.29)),240px)}   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
