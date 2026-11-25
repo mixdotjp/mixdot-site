@@ -443,6 +443,7 @@ html.nogap .thanks>*+*{margin-top:14px}
 .form input,.form textarea{min-width:0;max-width:100%;box-sizing:border-box}   /* 入力欄が、枠より広がって横スクロールにならない */
 @media (orientation:landscape) and (min-width:800px){html.land{--lm:max(24px,calc(var(--vh0,360px)*.095))}html.land .hero{gap:9vw}html.land .hero .words{--pd:max(16px,calc(var(--sym)*.088),1.9vw);--pg:max(calc(var(--sym)*.03),.5vw)}html.land .hero .concept{font-size:max(14px,calc(var(--sym)*.095),1.9vw)}}
 html.small .nav{padding-bottom:calc(var(--gutter) + 23px)}
+html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulation;touch-action:manipulation}   /* ボタン周りを素早く2回タップしても、画面が拡大しない（ピンチの拡大は今まで通り） */
 </style>
 </head>
 <body id="top">
