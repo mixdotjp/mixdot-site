@@ -280,6 +280,13 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 @keyframes mx-wait{0%,100%{opacity:.6}50%{opacity:.28}}
 @media (prefers-reduced-motion:reduce){.form.sending button{animation:none}}
 .form.sent > label,.form.sent > .form-foot{opacity:0;pointer-events:none}
+.savesheet{position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;background:rgba(245,245,245,.99);display:flex;align-items:center;justify-content:center;padding:24px}
+.savesheet .savebox{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:100%}
+.savesheet img{display:block;width:auto;height:auto;max-width:min(88vw,480px);max-height:calc(100vh - 150px);box-shadow:0 0 0 1px rgba(26,26,26,.12);-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+.savesheet p{margin:14px 0 0;font-size:12px;line-height:1.8;letter-spacing:.04em;color:#1a1a1a}
+.savesheet button{margin-top:10px;padding:6px 20px;border:1px solid #1a1a1a;border-radius:999px;background:transparent;color:#1a1a1a;font:inherit;font-size:12px;cursor:pointer}
+html[data-theme="dark"] .savesheet{background:rgba(26,26,26,.99)}
+html[data-theme="dark"] .savesheet p,html[data-theme="dark"] .savesheet button{color:#f5f5f5;border-color:#f5f5f5}
 .thanks{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s ease .35s}
 .form.sent .thanks{opacity:1}
 .thanks p{margin:0}
@@ -339,7 +346,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
   .hero{--stage-gap:calc(38px*var(--u,1));min-height:calc(var(--vh0,100svh) - 9px);padding-top:calc(36px*var(--u,1));padding-bottom:calc(36px*var(--u,1));align-content:center}   /* 高さ＝開いた時の画面＋48px。下の罫線は、ブラウザのバー（下のUI）の裏に隠れる。中身は上下中央＝シンボルの上と、ボタンの下の空きが同じ */
   .stage{height:auto;padding-top:0;padding-bottom:0}
-  html.small .hero{align-content:start;padding-top:calc(60px*var(--u,1))}   /* 小さいiPhone（縦）：上の空きを詰める。中身は、上寄せ＋少しの空き */
+  html.small .hero{align-content:start;padding-top:calc(78px*var(--u,1))}   /* 小さいiPhone（縦）：上の空きを詰める。中身は、上寄せ＋少しの空き */
   .hero{--sym:min(61vw,calc(240px*var(--u,1)))}   /* 画面が低いときは、全体を同じ比率のまま縮める（--u） */   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
   .c.words,.c.words .maker{width:var(--sym)}   /* パレットの左右の端は、シンボルの左右の端（丸いアーチの出っ張り）に合わせる。ロゴタイプの幅には合わせない */
@@ -389,18 +396,19 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 .form-foot .small{min-width:0}
 /* 縦向きで画面が低い（古い・小さいiPhoneなど）：間隔とシンボルを縮める */
 /* 横向きで画面が低い：左にシンボル（上下に空きを取る）、右にコピー（横書き）・パレット3段・ボタン。PCと同じ考え方 */
-html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .1))}
+html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .07))}
 @media (min-width:761px){html.land{--hh:74px}}   /* PCの幅では、ヘッダーが少し高い */
 html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh) + 6px);padding:0 0 6px 6vw;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
 html.land .hero .c{padding:0;flex:none}
 html.land .hero .stage{height:auto;gap:0;position:relative;top:calc(var(--sym) * .012);width:auto}
-html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(26px,calc(var(--sym) * .15));position:relative;top:calc(var(--sym) * .012);display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 4px);margin-left:calc(var(--sym) * .05)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
+html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(26px,calc(var(--sym) * .15));position:relative;top:calc(var(--sym) * .012);display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 4px);margin-left:max(14px,calc(var(--sym) * .05))}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
 html.land .hero .concept{position:absolute;left:calc(var(--pw) / 2 + var(--sym) * .065);top:calc(var(--sym) * .46);transform:translate(-50%,-50%);writing-mode:horizontal-tb;font-size:max(14px,calc(var(--sym) * .095));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:max-content;height:auto;text-align:left}   /* 2行とも、左をそろえる。かたまりの中心は、今までどおり、パレットの中央 */
 html.land .hero .words .maker{position:absolute;left:0;top:calc(var(--sym) * 1.189409);transform:translateY(-50%);width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
 html.land .hero .dots{display:grid;grid-template-columns:repeat(11,var(--pd));gap:var(--pg);width:auto;justify-content:start}
 html.land .hero .dots button{width:var(--pd);height:var(--pd)}
 html.land .hero .dots button.sp-only{display:block}
-html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(26px,calc(var(--sym) * .15)));gap:4px;flex:none;margin:0}
+html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(26px,calc(var(--sym) * .15)));gap:4px;-webkit-box-flex:0;flex:none;margin:0;-webkit-align-self:center;align-self:center}
+html.land .hero .dots{-webkit-align-self:center;align-self:center;grid-gap:var(--pg)}
 html.land .hero .tool{width:max(26px,calc(var(--sym) * .15));height:max(26px,calc(var(--sym) * .15))}
 
 /* ── 古いブラウザ向けの代わり：flexの gap が無い場合は、余白で間隔を作る ── */
@@ -432,6 +440,7 @@ html.nogap .thanks>*+*{margin-top:14px}
   html:not(.land) .tool svg{width:calc(17px*var(--u,1));height:calc(17px*var(--u,1))}
 }
 .form input,.form textarea{min-width:0;max-width:100%;box-sizing:border-box}   /* 入力欄が、枠より広がって横スクロールにならない */
+@media (orientation:landscape) and (min-width:800px){html.land .hero{gap:9vw}html.land .hero .words{--pd:max(16px,calc(var(--sym)*.088),1.9vw);--pg:max(calc(var(--sym)*.03),.5vw)}html.land .hero .concept{font-size:max(14px,calc(var(--sym)*.095),1.9vw)}}
 </style>
 </head>
 <body id="top">
@@ -585,7 +594,10 @@ html.nogap .thanks>*+*{margin-top:14px}
   window.addEventListener("load",fixSvg);
   // 画面の高さ：ブラウザのバーが出ている状態の高さ（svh）を、見えない箱で測る。横向き→縦向きに戻した直後は、innerHeight が一瞬だけ大きい値（バーが隠れた状態）になり、余白が空いてしまったため
   var svp=document.createElement("div");svp.style.cssText="position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none";document.body.appendChild(svp);
-  function viewH(){var a=window.innerHeight,b=svp.offsetHeight;return (b>0&&b<=a+1)?b:a}
+  var lvp=document.createElement("div");lvp.style.cssText="position:fixed;left:0;top:0;width:0;height:100lvh;visibility:hidden;pointer-events:none";document.body.appendChild(lvp);
+  function viewH(){var a=window.innerHeight,b=svp.offsetHeight,h=(b>0&&b<=a+1)?b:a;
+    if(window.innerWidth>=800&&window.innerWidth>a){var c=lvp.offsetHeight;if(c>h&&c<=window.innerWidth)h=c}   // 横長の大きい画面（Pro Maxなど）は、上下のバーを無視して画面表示領域の高さで組む
+    return h}
   function lockVh(){var h=viewH(),w=window.innerWidth;root.style.setProperty("--vh0",h+"px");root.classList.toggle("land",w>h&&h<=520);root.classList.toggle("small",w<=h&&w<=375&&h<=700);root.style.setProperty("--u",(w<=760&&w<=h)?Math.max(.5,Math.min(w>=600?1.4:1,(h-140)/573)).toFixed(3):"1");fixSvg()}   // --u＝縦向きスマホで、冒頭全体を縮める倍率（画面が低いほど小さく。比率はそのまま）   // land＝横向きで低い画面／short＝縦向きで低い画面。どちらも、冒頭が1画面に収まる配置に切り替える
   lockVh();
   var lockT=[];function settle(){lockT.forEach(clearTimeout);lockT=[250,700,1400].map(function(ms){return setTimeout(function(){lockW=window.innerWidth;lockVh()},ms)})}   // 回転の途中は、値が不安定なので、落ち着いてから、もう一度測り直す
@@ -939,7 +951,9 @@ html.nogap .thanks>*+*{margin-top:14px}
     buildRegions(shownIdx);
   }
   function showVariant(){
-    if(p<1||!flipImgs.length)return;
+    if(p<1)return;
+    if(!flipImgs.length)buildFlip();   // 古い・小さい端末は、冒頭の動きを省くため、形の準備がまだ。ここで用意する（シャッフルが動かなかった原因）
+    if(!flipImgs.length)return;
     cancelAnimationFrame(rndTimer);var my=++rndToken;
     clearPaint();flipImgs.forEach(function(im){im.classList.remove("on")});   // 前に止めた形を消してから回す（重なり防止）
     mode="variant";vPhase="run";box.classList.add("flipping","shuffling");maker.classList.add("dim");btnSave.disabled=true;
@@ -1042,9 +1056,18 @@ html.nogap .thanks>*+*{margin-top:14px}
     makeWallpaper().then(function(blob){
       var file=new File([blob],"mixdot_with_you.png",{type:"image/png"});
       function dl(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mixdot_with_you.png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
+      function sheet(){   // 共有シートが使えない端末（古いiPhoneなど）：画面の真ん中に画像を出す。長押しで「写真に保存」
+        var url=URL.createObjectURL(blob),ov=document.createElement("div");ov.className="savesheet";
+        ov.innerHTML='<div class="savebox"><img alt="MIXDOT 待ち受け画像"><p>画像を長押しして、<br>「“写真”に追加」を選んでください</p><button type="button">とじる</button></div>';
+        ov.querySelector("img").src=url;
+        function close(){ov.remove();setTimeout(function(){URL.revokeObjectURL(url)},500)}
+        ov.querySelector("button").addEventListener("click",close);
+        ov.addEventListener("click",function(e){if(e.target===ov)close()});
+        document.body.appendChild(ov)}
       function plain(){
         var touchDev=window.matchMedia&&window.matchMedia("(pointer:coarse)").matches;   // 共有シートを出すのは、スマホ・タブレットだけ（写真に保存できる）。PCは、そのままダウンロード
-        if(touchDev&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError")dl()})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
+        if(touchDev&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError")sheet()})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
+        else if(touchDev){sheet()}
         else{dl()}
       }
       // 作業用プレビュー（アーティファクト）の中では、ダウンロードの許可を通す。本番のサイトでは、そのまま保存・共有
