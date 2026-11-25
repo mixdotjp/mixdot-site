@@ -280,9 +280,9 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 @keyframes mx-wait{0%,100%{opacity:.6}50%{opacity:.28}}
 @media (prefers-reduced-motion:reduce){.form.sending button{animation:none}}
 .form.sent > label,.form.sent > .form-foot{opacity:0;pointer-events:none}
-.savesheet{position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;background:rgba(245,245,245,.99);display:flex;align-items:center;justify-content:center;padding:24px}
+.savesheet{position:fixed;top:0;right:0;left:0;height:var(--vh0,100%);z-index:60;background:rgba(245,245,245,.99);display:flex;align-items:center;justify-content:center;padding:24px}
 .savesheet .savebox{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:100%}
-.savesheet img{display:block;width:auto;height:auto;max-width:min(88vw,480px);max-height:calc(100vh - 150px);box-shadow:0 0 0 1px rgba(26,26,26,.12);-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
+.savesheet img{display:block;width:auto;height:auto;max-width:min(88vw,480px);max-height:calc(var(--vh0,100vh) - 150px);box-shadow:0 0 0 1px rgba(26,26,26,.12);-webkit-touch-callout:default;-webkit-user-select:auto;user-select:auto}
 .savesheet p{margin:14px 0 0;font-size:12px;line-height:1.8;letter-spacing:.04em;color:#1a1a1a}
 .savesheet button{margin-top:10px;padding:6px 20px;border:1px solid #1a1a1a;border-radius:999px;background:transparent;color:#1a1a1a;font:inherit;font-size:12px;cursor:pointer}
 html[data-theme="dark"] .savesheet{background:rgba(26,26,26,.99)}
@@ -408,6 +408,7 @@ html.land .hero .dots{display:grid;grid-template-columns:repeat(11,var(--pd));ga
 html.land .hero .dots button{width:var(--pd);height:var(--pd)}
 html.land .hero .dots button.sp-only{display:block}
 html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(26px,calc(var(--sym) * .15)));gap:4px;-webkit-box-flex:0;flex:none;margin:0;-webkit-align-self:center;align-self:center}
+html.land .hero .words .maker .tools>*{margin:0}   /* 古いiPhone用の横並び余白が、2×2の並びをずらしていた */
 html.land .hero .dots{-webkit-align-self:center;align-self:center;grid-gap:var(--pg)}
 html.land .hero .tool{width:max(26px,calc(var(--sym) * .15));height:max(26px,calc(var(--sym) * .15))}
 
@@ -440,7 +441,8 @@ html.nogap .thanks>*+*{margin-top:14px}
   html:not(.land) .tool svg{width:calc(17px*var(--u,1));height:calc(17px*var(--u,1))}
 }
 .form input,.form textarea{min-width:0;max-width:100%;box-sizing:border-box}   /* 入力欄が、枠より広がって横スクロールにならない */
-@media (orientation:landscape) and (min-width:800px){html.land .hero{gap:9vw}html.land .hero .words{--pd:max(16px,calc(var(--sym)*.088),1.9vw);--pg:max(calc(var(--sym)*.03),.5vw)}html.land .hero .concept{font-size:max(14px,calc(var(--sym)*.095),1.9vw)}}
+@media (orientation:landscape) and (min-width:800px){html.land{--lm:max(24px,calc(var(--vh0,360px)*.095))}html.land .hero{gap:9vw}html.land .hero .words{--pd:max(16px,calc(var(--sym)*.088),1.9vw);--pg:max(calc(var(--sym)*.03),.5vw)}html.land .hero .concept{font-size:max(14px,calc(var(--sym)*.095),1.9vw)}}
+html.small .nav{padding-bottom:calc(var(--gutter) + 23px)}
 </style>
 </head>
 <body id="top">
@@ -598,9 +600,11 @@ html.nogap .thanks>*+*{margin-top:14px}
   function viewH(){var a=window.innerHeight,b=svp.offsetHeight,h=(b>0&&b<=a+1)?b:a;
     if(window.innerWidth>=800&&window.innerWidth>a){var c=lvp.offsetHeight;if(c>h&&c<=window.innerWidth)h=c}   // 横長の大きい画面（Pro Maxなど）は、上下のバーを無視して画面表示領域の高さで組む
     return h}
-  function lockVh(){var h=viewH(),w=window.innerWidth;root.style.setProperty("--vh0",h+"px");root.classList.toggle("land",w>h&&h<=520);root.classList.toggle("small",w<=h&&w<=375&&h<=700);root.style.setProperty("--u",(w<=760&&w<=h)?Math.max(.5,Math.min(w>=600?1.4:1,(h-140)/573)).toFixed(3):"1");fixSvg()}   // --u＝縦向きスマホで、冒頭全体を縮める倍率（画面が低いほど小さく。比率はそのまま）   // land＝横向きで低い画面／short＝縦向きで低い画面。どちらも、冒頭が1画面に収まる配置に切り替える
-  lockVh();
-  var lockT=[];function settle(){lockT.forEach(clearTimeout);lockT=[250,700,1400].map(function(ms){return setTimeout(function(){lockW=window.innerWidth;lockVh()},ms)})}   // 回転の途中は、値が不安定なので、落ち着いてから、もう一度測り直す
+  var touchDev="ontouchstart" in window,hCache={};   // スマホは、向きごとに最初に測った高さを覚える（縦→横→縦で、大きさが変わらないように）
+  function lockVh(final,init){var h=viewH(),w=window.innerWidth;
+    if(touchDev){var k=w>h?"L":"P",c=hCache[k];if(c&&c.w===w)h=c.h;else if(init||final)hCache[k]={w:w,h:h}}root.style.setProperty("--vh0",h+"px");root.classList.toggle("land",w>h&&h<=520);root.classList.toggle("small",w<=h&&w<=375&&h<=700);root.style.setProperty("--u",(w<=760&&w<=h)?Math.max(.5,Math.min(w>=600?1.4:1,(h-140)/573)).toFixed(3):"1");fixSvg()}   // --u＝縦向きスマホで、冒頭全体を縮める倍率（画面が低いほど小さく。比率はそのまま）   // land＝横向きで低い画面／short＝縦向きで低い画面。どちらも、冒頭が1画面に収まる配置に切り替える
+  lockVh(false,true);
+  var lockT=[];function settle(){lockT.forEach(clearTimeout);lockT=[250,700,1400].map(function(ms){return setTimeout(function(){lockW=window.innerWidth;lockVh(ms===1400)},ms)})}   // 回転の途中は、値が不安定なので、落ち着いてから、もう一度測り直す
   window.addEventListener("resize",function(){if(window.innerWidth!==lockW){lockW=window.innerWidth;lockVh();settle()}});
   window.addEventListener("orientationchange",function(){settle()});
 
@@ -1058,7 +1062,7 @@ html.nogap .thanks>*+*{margin-top:14px}
       function dl(){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mixdot_with_you.png";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
       function sheet(){   // 共有シートが使えない端末（古いiPhoneなど）：画面の真ん中に画像を出す。長押しで「写真に保存」
         var url=URL.createObjectURL(blob),ov=document.createElement("div");ov.className="savesheet";
-        ov.innerHTML='<div class="savebox"><img alt="MIXDOT 待ち受け画像"><p>画像を長押しして、<br>「“写真”に追加」を選んでください</p><button type="button">とじる</button></div>';
+        ov.innerHTML='<div class="savebox"><img alt="MIXDOT 待ち受け画像"><p>画像を長押しして、<br>「画像を保存」を選んでください</p><button type="button">とじる</button></div>';
         ov.querySelector("img").src=url;
         function close(){ov.remove();setTimeout(function(){URL.revokeObjectURL(url)},500)}
         ov.querySelector("button").addEventListener("click",close);
