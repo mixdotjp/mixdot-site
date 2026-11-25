@@ -304,7 +304,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   .head .c:last-child{justify-content:flex-end}
   .burger{display:flex;flex-direction:column;justify-content:center;gap:7px;position:fixed;top:7px;right:calc(var(--gutter) - 6px);z-index:21;
     width:44px;height:44px;padding:0 10px;border:0;border-radius:50%;background:var(--ground);cursor:pointer}
-  .burger span{display:block;height:1.5px;background:var(--ink);transition:transform .35s var(--draw)}
+  .burger span{display:block;flex:none;width:24px;height:1.5px;background:var(--ink);transition:transform .35s var(--draw)}   /* 幅をはっきり指定：古いiPhoneでは、ボタンの中身が横に伸びず、線が見えなかった */
   .burger[aria-expanded="true"] span:first-child{transform:translateY(4.25px) rotate(45deg)}
   .burger[aria-expanded="true"] span:last-child{transform:translateY(-4.25px) rotate(-45deg)}
   .nav{position:fixed;top:0;right:0;bottom:0;left:0;z-index:20;background:var(--ground);flex-direction:column;flex-wrap:nowrap;justify-content:center;align-items:flex-start;
@@ -339,6 +339,7 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
   .head .c.s3{grid-column:auto}   /* ナビの枡をロゴの横に置く（下に回り込んでヘッダーが2段になっていた） */
   .hero{--stage-gap:calc(38px*var(--u,1));min-height:calc(var(--vh0,100svh) - 9px);padding-top:calc(36px*var(--u,1));padding-bottom:calc(36px*var(--u,1));align-content:center}   /* 高さ＝開いた時の画面＋48px。下の罫線は、ブラウザのバー（下のUI）の裏に隠れる。中身は上下中央＝シンボルの上と、ボタンの下の空きが同じ */
   .stage{height:auto;padding-top:0;padding-bottom:0}
+  html.small .hero{align-content:start;padding-top:calc(60px*var(--u,1))}   /* 小さいiPhone（縦）：上の空きを詰める。中身は、上寄せ＋少しの空き */
   .hero{--sym:min(61vw,calc(240px*var(--u,1)))}   /* 画面が低いときは、全体を同じ比率のまま縮める（--u） */   /* 画面が低いときは、全体が収まるようシンボルも縮む */
   .gather{width:var(--sym)}   /* パレット（228px）よりほんの少し大きく */
   .c.words,.c.words .maker{width:var(--sym)}   /* パレットの左右の端は、シンボルの左右の端（丸いアーチの出っ張り）に合わせる。ロゴタイプの幅には合わせない */
@@ -390,17 +391,17 @@ a,button,.gather,.gather svg,.gather circle{-webkit-tap-highlight-color:transpar
 /* 横向きで画面が低い：左にシンボル（上下に空きを取る）、右にコピー（横書き）・パレット3段・ボタン。PCと同じ考え方 */
 html.land{--hh:57px;--lm:max(20px,calc(var(--vh0,360px) * .1))}
 @media (min-width:761px){html.land{--hh:74px}}   /* PCの幅では、ヘッダーが少し高い */
-html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh));padding:0 0 0 6vw;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
+html.land .hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6vw;min-height:calc(var(--vh0,360px) - var(--hh) + 6px);padding:0 0 6px 6vw;--sym:min(calc((var(--vh0,360px) - var(--hh) - 2 * var(--lm)) / 1.29),300px)}
 html.land .hero .c{padding:0;flex:none}
 html.land .hero .stage{height:auto;gap:0;position:relative;top:calc(var(--sym) * .012);width:auto}
-html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(28px,calc(var(--sym) * .15));position:relative;top:calc(var(--sym) * .012);display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 8px);margin-left:calc(var(--sym) * .05)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
+html.land .hero .words{--pd:max(16px,calc(var(--sym) * .088));--pg:calc(var(--sym) * .03);--pw:calc(11 * var(--pd) + 10 * var(--pg));--tw:max(26px,calc(var(--sym) * .15));position:relative;top:calc(var(--sym) * .012);display:block;height:calc(var(--sym) * 1.293585);width:calc(var(--pw) + var(--sym) * .07 + 2 * var(--tw) + 4px);margin-left:calc(var(--sym) * .05)}   /* パレットは、下のタイプロゴと上下の中心をそろえ、シンボルから離して右へ。コピーは、パレットの真上で左右中央 */
 html.land .hero .concept{position:absolute;left:calc(var(--pw) / 2 + var(--sym) * .065);top:calc(var(--sym) * .46);transform:translate(-50%,-50%);writing-mode:horizontal-tb;font-size:max(14px,calc(var(--sym) * .095));letter-spacing:.1em;line-height:1.8;margin:0;white-space:nowrap;width:max-content;height:auto;text-align:left}   /* 2行とも、左をそろえる。かたまりの中心は、今までどおり、パレットの中央 */
 html.land .hero .words .maker{position:absolute;left:0;top:calc(var(--sym) * 1.189409);transform:translateY(-50%);width:auto;margin:0;display:flex;flex-direction:row;align-items:center;gap:calc(var(--sym) * .07)}
 html.land .hero .dots{display:grid;grid-template-columns:repeat(11,var(--pd));gap:var(--pg);width:auto;justify-content:start}
 html.land .hero .dots button{width:var(--pd);height:var(--pd)}
 html.land .hero .dots button.sp-only{display:block}
-html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(28px,calc(var(--sym) * .15)));gap:8px;flex:none;margin:0}
-html.land .hero .tool{width:max(28px,calc(var(--sym) * .15));height:max(28px,calc(var(--sym) * .15))}
+html.land .hero .words .maker .tools{position:static;transform:none;display:grid;grid-template-columns:repeat(2,max(26px,calc(var(--sym) * .15)));gap:4px;flex:none;margin:0}
+html.land .hero .tool{width:max(26px,calc(var(--sym) * .15));height:max(26px,calc(var(--sym) * .15))}
 
 /* ── 古いブラウザ向けの代わり：flexの gap が無い場合は、余白で間隔を作る ── */
 html.nogap .brand>*+*,html.nogap .lockup>*+*{margin-left:calc(var(--h)*.35413)}
@@ -578,7 +579,11 @@ html.nogap .thanks>*+*{margin-top:14px}
   // ── 冒頭の高さ：開いた時の画面の高さで固定する（スクロールでブラウザのバーが引っ込んでも、シンボルや線がずれない）。横幅が変わった時（回転など）だけ測り直す ──
   function toTop(smooth){if("scrollBehavior" in document.documentElement.style){window.scrollTo({top:0,behavior:smooth?"smooth":"auto"})}else{window.scrollTo(0,0)}}   // 古いiPhoneは、scrollToに設定を渡せない
   var lockW=window.innerWidth;
-  function lockVh(){var h=window.innerHeight,w=window.innerWidth;root.style.setProperty("--vh0",h+"px");root.classList.toggle("land",w>h&&h<=520);root.style.setProperty("--u",(w<=760&&w<=h)?Math.max(.5,Math.min(w>=600?1.4:1,(h-140)/573)).toFixed(3):"1")}   // --u＝縦向きスマホで、冒頭全体を縮める倍率（画面が低いほど小さく。比率はそのまま）   // land＝横向きで低い画面／short＝縦向きで低い画面。どちらも、冒頭が1画面に収まる配置に切り替える
+  // 古いiPhone（iOS 12など）は、CSSの aspect-ratio が使えず、SVGの高さが正しく決まらない（シンボルとロゴタイプの間が空く・メニューのロゴが崩れる）。そこで、幅から高さを、はっきり指定する
+  var noAR=!(window.CSS&&CSS.supports&&CSS.supports("aspect-ratio","1/1"));
+  function fixSvg(){if(!noAR)return;[].forEach.call(document.querySelectorAll("svg.wordmark,svg.mark"),function(sv){var w=sv.getBoundingClientRect().width;if(!w)return;sv.style.height=(w*(sv.classList.contains("wordmark")?220/1025:1))+"px"})}
+  window.addEventListener("load",fixSvg);
+  function lockVh(){var h=window.innerHeight,w=window.innerWidth;root.style.setProperty("--vh0",h+"px");root.classList.toggle("land",w>h&&h<=520);root.classList.toggle("small",w<=h&&w<=375&&h<=700);root.style.setProperty("--u",(w<=760&&w<=h)?Math.max(.5,Math.min(w>=600?1.4:1,(h-140)/573)).toFixed(3):"1");fixSvg()}   // --u＝縦向きスマホで、冒頭全体を縮める倍率（画面が低いほど小さく。比率はそのまま）   // land＝横向きで低い画面／short＝縦向きで低い画面。どちらも、冒頭が1画面に収まる配置に切り替える
   lockVh();
   window.addEventListener("resize",function(){if(window.innerWidth!==lockW){lockW=window.innerWidth;lockVh()}});
   window.addEventListener("orientationchange",function(){setTimeout(function(){lockW=window.innerWidth;lockVh()},300)});
