@@ -11,11 +11,11 @@ else if(s)localStorage.removeItem("mixdot_theme")}catch(e){}})();
 </script>
 <title>MIXDOT｜クリエイティブディレクション・デザイン・Web制作</title>
 <meta name="description" content="アイデアを探求し、表現を設計するクリエイティブカンパニーです。">
-<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2">
-<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=2">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+<link rel="icon" href="/favicon.ico?v=3" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
 <link rel="manifest" href="/site.webmanifest?v=2">
 <meta name="application-name" content="MIXDOT">
 <meta name="apple-mobile-web-app-title" content="MIXDOT">
@@ -444,6 +444,12 @@ html.nogap .thanks>*+*{margin-top:14px}
 @media (orientation:landscape) and (min-width:800px){html.land{--lm:max(24px,calc(var(--vh0,360px)*.095))}html.land .hero{gap:9vw}html.land .hero .words{--pd:max(16px,calc(var(--sym)*.088),1.9vw);--pg:max(calc(var(--sym)*.03),.5vw)}html.land .hero .concept{font-size:max(14px,calc(var(--sym)*.095),1.9vw)}}
 html.small .nav{padding-bottom:calc(var(--gutter) + 23px)}
 html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulation;touch-action:manipulation}   /* ボタン周りを素早く2回タップしても、画面が拡大しない（ピンチの拡大は今まで通り） */
+
+/* 塗れることを見せる：実際に円が塗られて、すぐ戻る＋ひとこと */
+.maker{position:relative}
+.paint-hint{position:absolute;left:0;right:0;top:-30px;text-align:center;font-size:12px;letter-spacing:.12em;color:var(--ink-soft);opacity:0;-webkit-transition:opacity .4s;transition:opacity .4s;pointer-events:none;white-space:nowrap}
+.paint-hint.on{opacity:1}
+.paint-hint{display:none}
 </style>
 </head>
 <body id="top">
@@ -843,11 +849,27 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
   })();
 
   // ── 集まったあとの遊び：色を選んで、円を押す ──
+  // 実際に塗る動きを、ほんの少し見せる（まだ何も塗ってない時だけ。見せたら元に戻す）
+  var demoT=[],demoCells=[],demoCol=null,hintEl=document.createElement("div");hintEl.className="paint-hint";hintEl.setAttribute("aria-hidden","true");maker.appendChild(hintEl);
+  var hasPainted=false;try{hasPainted=localStorage.getItem("mixdot_painted")==="1"}catch(e){}   // 一度でも自分で塗ったことがある人には、見せない
+  function markPainted(){if(hasPainted)return;hasPainted=true;try{localStorage.setItem("mixdot_painted","1")}catch(e){}}
+  function demoPaint(count){
+    if(hasPainted||p<1||vPhase==="run"||state.some(function(v){return v!==NONE}))return;
+    demoT.forEach(clearTimeout);demoT=[];
+    var order=[6,4,5,7].slice(0,count||4),col=colors[picked][1];demoCells=order;demoCol=col;
+    hintEl.classList.add("on");
+    order.forEach(function(n,k){demoT.push(setTimeout(function(){state[n]=col;draw()},300+k*420))});
+    var end=300+order.length*420+900;
+    demoT.push(setTimeout(function(){revertDemo();hintEl.classList.remove("on")},end));
+  }
+  function revertDemo(){var ch=false;demoCells.forEach(function(n){if(state[n]===demoCol){state[n]=NONE;ch=true}});demoCells=[];if(ch)draw()}
+  window.__demoPaint=demoPaint;
+  window.__demoStop=function(){demoT.forEach(clearTimeout);demoT=[];revertDemo();hintEl.classList.remove("on")};
   colors.forEach(function(col,i){
     var b=document.createElement("button");
     b.type="button";b.style.background=col[1];b.title=col[0];b.setAttribute("aria-label","色："+col[0]);
     b.setAttribute("aria-pressed",i===picked);
-    b.addEventListener("click",function(){picked=i;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===i)})});
+    b.addEventListener("click",function(){picked=i;swatches.forEach(function(x,n){x.setAttribute("aria-pressed",n===i)});window.__demoPaint&&window.__demoPaint(2)});
     if(i===SPI)b.className="sp-only";
     dots.appendChild(b);swatches.push(b);
   });
@@ -855,7 +877,8 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
   cells.forEach(function(c,n){
     function fill(){
       if(p<1)return;
-      state[n]=(state[n]===colors[picked][1])?NONE:colors[picked][1];draw();keep();
+      if(demoCells.length)window.__demoStop();
+      state[n]=(state[n]===colors[picked][1])?NONE:colors[picked][1];markPainted();draw();keep();
     }
     c.addEventListener("click",fill);
     // 乗せると、選んでいる色がうっすら見える（押す前の予告）
@@ -1106,6 +1129,16 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
     });
   });
 })();
+
+  // ── はじめて触る人へのヒント：数秒操作がなければ、実際に円が塗られる様子を見せる ──
+  (function(){
+    var n=0,touched=false,t,mk=document.getElementById("maker"),waited=0;
+    function stop(){touched=true;clearTimeout(t);window.__demoStop&&window.__demoStop()}
+    var area=[document.getElementById("stage"),mk];   // 触れて止めるのは、シンボルとパレット。ページをスクロールしただけでは止めない
+    ["touchstart","mousedown"].forEach(function(e){area.forEach(function(a){if(a)a.addEventListener(e,stop,{passive:true})})});document.addEventListener("keydown",stop);
+    function play(){if(touched||n>=2)return;window.__demoPaint&&window.__demoPaint(4);n++;t=setTimeout(play,6500)}
+    var w=setInterval(function(){waited+=400;if((mk&&mk.classList.contains("show"))||(mk&&mk.classList.contains("is-ready")&&waited>4500)||waited>7000){clearInterval(w);t=setTimeout(play,3000)}},400);
+  })();
 </script>
 </body>
 </html>
