@@ -173,6 +173,9 @@ svg{max-width:100%;height:auto;display:block}
 .gather .flip.on{visibility:visible}
 .gather .flip path{fill:var(--logo)}   /* 線の色は、メインのロゴと同じ（白の世界は #1A1A1A、黒の世界は #FFFFFF） */
 .gather canvas.fillcv{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0}
+/* 塗る前の予告：薄いドット格子（濡れている感じ） */
+.gather ellipse.hint{fill:url(#hintPat);opacity:0;pointer-events:none}
+.gather ellipse.hint.on,.gather ellipse.hint.dm{opacity:.9}
 .gather.shuffling,.gather.paintable{cursor:pointer}
 .gather.flipping svg{visibility:hidden}
 
@@ -486,6 +489,7 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
       <div class="c first s3 stage" id="stage">
         <div class="gather" id="gather">
           <svg class="mark" viewBox="0 0 1055.923 1055.923" role="group" aria-label="MIXDOT シンボル。集まったあと、円を押すと選んだ色で塗れる">
+            <defs><pattern id="hintPat" width="19" height="19" patternUnits="userSpaceOnUse"><ellipse id="hintDot" cx="9.5" cy="9.5" rx="4.9" ry="4.9" fill="#e2452c"/></pattern></defs>
             <circle cx="233.336" cy="233.336" r="208.336" tabindex="0" role="button" aria-label="左上の円を塗る"/><circle cx="822.586" cy="233.336" r="208.336" tabindex="0" role="button" aria-label="右上の円を塗る"/>
             <circle cx="233.336" cy="822.586" r="208.336" tabindex="0" role="button" aria-label="左下の円を塗る"/><circle cx="822.586" cy="822.586" r="208.336" tabindex="0" role="button" aria-label="右下の円を塗る"/>
             <circle cx="233.336" cy="527.961" r="208.336" tabindex="0" role="button" aria-label="左の円を塗る"/><circle cx="822.586" cy="527.961" r="208.336" tabindex="0" role="button" aria-label="右の円を塗る"/>
@@ -850,6 +854,15 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
 
   // ── 集まったあとの遊び：色を選んで、円を押す ──
   // 実際に塗る動きを、ほんの少し見せる（まだ何も塗ってない時だけ。見せたら元に戻す）
+  // ドット格子の予告（乗せた時・自動デモ共通）。塗りの色はそのままにして、上に薄く重ねる
+  var hintDot=document.getElementById("hintDot"),hintSvg=box.querySelector("svg.mark"),hintEls=cells.map(function(c){
+    var e=document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+    e.setAttribute("class","hint");e.setAttribute("cx",c.getAttribute("cx"));e.setAttribute("cy",c.getAttribute("cy"));
+    e.setAttribute("rx",c.getAttribute("r")-26);e.setAttribute("ry",c.getAttribute("r")-26);e.setAttribute("aria-hidden","true");
+    hintSvg.insertBefore(e,c.nextSibling);return e;   // 自分の円のすぐ上＝あとの円には隠れる
+  });
+  function hintShow(n,k){hintDot.setAttribute("fill",colors[picked][1]);hintEls[n].classList.add(k||"on")}
+  function hintHide(n,k){hintEls[n].classList.remove(k||"on")}
   var demoT=[],demoCells=[],demoCol=null,hintEl=document.createElement("div");hintEl.className="paint-hint";hintEl.setAttribute("aria-hidden","true");maker.appendChild(hintEl);
   var hasPainted=false;try{localStorage.removeItem("mixdot_painted")}catch(e){}   // 塗った記憶は、ページを開いている間だけ。更新（Command+R）や左上のロゴで、また最初から補助を出す
   function markPainted(){hasPainted=true}
@@ -859,15 +872,15 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
     demoT.forEach(clearTimeout);demoT=[];revertDemo();
     var order=[6,4,5,7].slice(0,count||4),col=colors[picked][1];demoCol=col;
     hintEl.classList.add("on");
-    var d0=fast?0:300,on=fast?480:800,gap=fast?120:260,t=d0;   // 1つ塗って、消して、次を塗って、消す（残像を重ねない）
+    var d0=fast?0:300,on=fast?320:800,gap=fast?40:260,t=d0;   // 1つ塗って、消して、次を塗って、消す（残像を重ねない）
     order.forEach(function(n){
-      demoT.push(setTimeout(function(){demoCells=[n];state[n]=col;draw()},t));
+      demoT.push(setTimeout(function(){demoCells=[n];hintShow(n,"dm")},t));
       demoT.push(setTimeout(function(){revertDemo()},t+on));
       t+=on+gap;
     });
     demoT.push(setTimeout(function(){hintEl.classList.remove("on")},t));
   }
-  function revertDemo(){var ch=false;demoCells.forEach(function(n){if(state[n]===demoCol){state[n]=NONE;ch=true}});demoCells=[];if(ch)draw()}
+  function revertDemo(){demoCells.forEach(function(n){hintHide(n,"dm")});demoCells=[]}
   window.__demoPaint=demoPaint;
   window.__demoStop=function(){demoT.forEach(clearTimeout);demoT=[];revertDemo();hintEl.classList.remove("on")};
   colors.forEach(function(col,i){
@@ -883,15 +896,15 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
     function fill(){
       if(p<1)return;
       if(demoCells.length)window.__demoStop();
-      state[n]=(state[n]===colors[picked][1])?NONE:colors[picked][1];markPainted();draw();keep();
+      hintHide(n);state[n]=(state[n]===colors[picked][1])?NONE:colors[picked][1];markPainted();draw();keep();
     }
     c.addEventListener("click",fill);
     // 乗せると、選んでいる色がうっすら見える（押す前の予告）
     c.addEventListener("pointerenter",function(e){
       if(p<1||e.pointerType==="touch")return;
-      c.style.fill="color-mix(in srgb, "+colors[picked][1]+" 45%, "+state[n]+")";
+      if(demoCells.length)window.__demoStop();hintShow(n);
     });
-    c.addEventListener("pointerleave",function(){if(p>=1)c.style.fill=state[n]});
+    c.addEventListener("pointerleave",function(){hintHide(n)});
     c.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();fill()}});
   });
   resetBtns.forEach(function(b){b.addEventListener("click",function(){
@@ -1098,10 +1111,11 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
         ov.addEventListener("click",function(e){if(e.target===ov)close()});
         document.body.appendChild(ov)}
       function plain(){
+        var smallScreen=document.documentElement.classList.contains("legacy")||Math.min(screen.width,screen.height)<=375;
         var touchDev=window.matchMedia&&window.matchMedia("(pointer:coarse)").matches;   // 共有シートを出すのは、スマホ・タブレットだけ（写真に保存できる）。PCは、そのままダウンロード
-        if(touchDev&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError")sheet()})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
-        else if(touchDev){sheet()}
-        else{dl()}
+        if(touchDev&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:"MIXDOT"}).catch(function(e){if(!e||e.name!=="AbortError"){if(smallScreen)sheet();else dl()}})}   // 共有が通らなかったときは、ダウンロードに切り替える（自分で閉じたときは何もしない）
+        else if(touchDev&&smallScreen){sheet()}   // 長押しシートは、小さい画面の端末（古いiPhoneなど）だけ
+        else{dl()}   // 画面が大きい端末・PCは、そのまま保存（ダウンロード）
       }
       // 作業用プレビュー（アーティファクト）の中では、ダウンロードの許可を通す。本番のサイトでは、そのまま保存・共有
       if(window.claude&&window.claude.use){window.claude.use("downloads").then(function(dl){if(dl){dl.save({filename:"mixdot_with_you.png",data:blob}).catch(function(){})}else{plain()}}).catch(plain)}
