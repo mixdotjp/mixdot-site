@@ -836,7 +836,7 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
   if(still){draw()}else{
     play();
     document.querySelector(".brand").addEventListener("click",function(e){
-      e.preventDefault();toTop(true);play();
+      e.preventDefault();window.__demoReset&&window.__demoReset();toTop(true);play();
     });
   }
 
@@ -851,17 +851,21 @@ html,body,button,a,.maker,.tools,.dots,.gather,#box{-ms-touch-action:manipulatio
   // ── 集まったあとの遊び：色を選んで、円を押す ──
   // 実際に塗る動きを、ほんの少し見せる（まだ何も塗ってない時だけ。見せたら元に戻す）
   var demoT=[],demoCells=[],demoCol=null,hintEl=document.createElement("div");hintEl.className="paint-hint";hintEl.setAttribute("aria-hidden","true");maker.appendChild(hintEl);
-  var hasPainted=false;try{hasPainted=localStorage.getItem("mixdot_painted")==="1"}catch(e){}   // 一度でも自分で塗ったことがある人には、見せない
-  function markPainted(){if(hasPainted)return;hasPainted=true;try{localStorage.setItem("mixdot_painted","1")}catch(e){}}
+  var hasPainted=false;try{localStorage.removeItem("mixdot_painted")}catch(e){}   // 塗った記憶は、ページを開いている間だけ。更新（Command+R）や左上のロゴで、また最初から補助を出す
+  function markPainted(){hasPainted=true}
+  window.__demoReset=function(){hasPainted=false};
   function demoPaint(count,fast){
     if(hasPainted||p<1||vPhase==="run"||state.some(function(v){return v!==NONE}))return;
-    demoT.forEach(clearTimeout);demoT=[];
-    var order=[6,4,5,7].slice(0,count||4),col=colors[picked][1];demoCells=order;demoCol=col;
+    demoT.forEach(clearTimeout);demoT=[];revertDemo();
+    var order=[6,4,5,7].slice(0,count||4),col=colors[picked][1];demoCol=col;
     hintEl.classList.add("on");
-    var d0=fast?0:300,st=fast?110:420,hold=fast?700:900;   // パレットを押した時は、すぐ塗って、テンポよく
-    order.forEach(function(n,k){demoT.push(setTimeout(function(){state[n]=col;draw()},d0+k*st))});
-    var end=d0+order.length*st+hold;
-    demoT.push(setTimeout(function(){revertDemo();hintEl.classList.remove("on")},end));
+    var d0=fast?0:300,on=fast?480:800,gap=fast?120:260,t=d0;   // 1つ塗って、消して、次を塗って、消す（残像を重ねない）
+    order.forEach(function(n){
+      demoT.push(setTimeout(function(){demoCells=[n];state[n]=col;draw()},t));
+      demoT.push(setTimeout(function(){revertDemo()},t+on));
+      t+=on+gap;
+    });
+    demoT.push(setTimeout(function(){hintEl.classList.remove("on")},t));
   }
   function revertDemo(){var ch=false;demoCells.forEach(function(n){if(state[n]===demoCol){state[n]=NONE;ch=true}});demoCells=[];if(ch)draw()}
   window.__demoPaint=demoPaint;
